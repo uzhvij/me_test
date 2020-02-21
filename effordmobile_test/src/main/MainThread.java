@@ -21,7 +21,7 @@ public class MainThread{
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		//only for debugging, set args without paths.txt
-		args = new String[]{"paths.txt","results.txt", "10"};
+		//args = new String[]{"paths.txt","results.txt", "10"};
 		
 		if(checkAndSetArguments(args)){																
 			if(PathsKeeper.getPathsFromFile(sourceFileName, listScanningPaths)){				//gets paths from paths.txt
