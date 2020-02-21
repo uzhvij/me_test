@@ -3,20 +3,25 @@ package logic;
 import java.io.File;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
+
+import data.ResultWriter;
 import main.MainThread;
 
-public class DirectoryScanner implements Runnable, WorkStoper {		//class that scan given file directory
+//class that scan given file directory and save result to file
+public class DirectoryScanner implements Runnable, WorkStoper {		
 	
 	TreeMap<String,Integer> scanningResult;
 	CountDownLatch latch;
 	private String directoryPath;
 	int fileCounter = 0;
 	boolean isWorking = true;
+	String resultFileName;
 	
-	public DirectoryScanner(String directoryPath, CountDownLatch latch, TreeMap<String,Integer> scanningResult) {
+	public DirectoryScanner(String directoryPath, CountDownLatch latch, TreeMap<String,Integer> scanningResult, String resultFileName) {
 		this.directoryPath = directoryPath;
 		this.latch = latch;
 		this.scanningResult = scanningResult;
+		this.resultFileName = resultFileName;
 	}
 
 	@Override
@@ -28,8 +33,9 @@ public class DirectoryScanner implements Runnable, WorkStoper {		//class that sc
 
 	private void reportResult() {
 		synchronized (scanningResult) {
-			scanningResult.put(directoryPath, fileCounter);			//thread-safe writing result
+			scanningResult.put(directoryPath, fileCounter);			//thread-safe writing result to Map
 		}
+		ResultWriter.writeOneDirectoryScanningResultToFile( resultFileName, directoryPath, fileCounter);		//thread-safe write result to file
 	}
 
 	private void scanDirectory(String directoryPath){				//Recursive function, enter into each folder of the specified directory 

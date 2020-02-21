@@ -8,16 +8,17 @@ import java.util.TreeMap;
 
 //write result to the file(results.txt by default)
 public class ResultWriter {
-	public static void writeResultToFile(String resultFileName, TreeMap<String, Integer> scanningResult) {
+	private static boolean append = false;
+	
+	synchronized public static void writeOneDirectoryScanningResultToFile(String resultFileName, String directoryPath, Integer numberOfFiles) {
 		try {
-			BufferedWriter fileWriter = new BufferedWriter(new FileWriter(resultFileName));
-			for (Entry<String, Integer> line : scanningResult.entrySet()) {
-				fileWriter.write(line.getKey() + ";" + line.getValue().toString());
-				fileWriter.newLine();
-			}
+			BufferedWriter fileWriter = new BufferedWriter(new FileWriter(resultFileName, append));
+			fileWriter.write(directoryPath + ";" + numberOfFiles);
+			fileWriter.newLine();
 			fileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(!append) append = true;
 	}
 }

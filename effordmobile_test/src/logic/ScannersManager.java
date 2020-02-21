@@ -7,7 +7,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import data.ResultWriter;
 import main.MainThread;
 
 public class ScannersManager implements Runnable, WorkStoper{				//class that managed threads, which scan directories
@@ -17,7 +16,7 @@ public class ScannersManager implements Runnable, WorkStoper{				//class that ma
 	List<DirectoryScanner> listStoppableThreads;							//list used for stop by demand all scanning threads
 	TreeMap<String, Integer> scanningResult;
 	List<String> listScanningPaths;
-	String resultFileName;;
+	String resultFileName;
 	
 	public ScannersManager(List<String> listScanningPaths, String resultFileName) {
 		this.resultFileName = resultFileName;
@@ -31,7 +30,7 @@ public class ScannersManager implements Runnable, WorkStoper{				//class that ma
 	@Override
 	public void run() {
 		for (String scanningPath : listScanningPaths) {
-			DirectoryScanner directoryScanner = new DirectoryScanner(scanningPath, latch, scanningResult);
+			DirectoryScanner directoryScanner = new DirectoryScanner(scanningPath, latch, scanningResult, resultFileName);
 			listStoppableThreads.add(directoryScanner);
 			executor.execute(directoryScanner);								//start scanning thread
 		}
@@ -41,8 +40,6 @@ public class ScannersManager implements Runnable, WorkStoper{				//class that ma
 			e.printStackTrace();
 		}
 		executor.shutdown();
-		
-		ResultWriter.writeResultToFile(resultFileName, scanningResult);		//write result to file
 		MainThread.printTable(scanningResult);								//print result to console
 	}
 
