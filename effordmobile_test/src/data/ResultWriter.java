@@ -3,8 +3,6 @@ package data;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 //write result to the file(results.txt by default)
 public class ResultWriter {
